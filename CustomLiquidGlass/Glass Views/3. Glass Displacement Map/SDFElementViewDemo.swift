@@ -4,31 +4,40 @@
 import SwiftUI
 import UIKit
 
-#Preview {
-  // Gradient ovalization is set to 0.5 according to a swizzle of
-  // didChangeValueForKey
-  @Previewable @State var gradientOvalization: CGFloat = 0.5
-  @Previewable @State var cornerRadius: CGFloat = 0.0
+struct SDFElementViewDemo: View {
+  var body: some View {
+    NavigationStack {
+      VStack {
+        SDFElementView(
+          gradientOvalization: gradientOvalization,
+          cornerRadius: cornerRadius)
+        .cornerRadius(cornerRadius)
 
-  VStack {
-    SDFElementView(
-      gradientOvalization: gradientOvalization,
-      cornerRadius: cornerRadius)
-    .cornerRadius(cornerRadius)
+        VStack {
+          VStack(alignment: .leading) {
+            Text("Gradient Ovalization")
+            Slider(value: $gradientOvalization, in: 0...1)
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
 
-    VStack {
-      VStack(alignment: .leading) {
-        Text("Gradient Ovalization")
-        Slider(value: $gradientOvalization, in: 0...1)
+          VStack(alignment: .leading) {
+            Text("Corner Radius")
+            Slider(value: $cornerRadius, in: 0...340)
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
+        }
       }
-      .frame(maxWidth: .infinity, alignment: .leading)
-
-      VStack(alignment: .leading) {
-        Text("Corner Radius")
-        Slider(value: $cornerRadius, in: 0...340)
-      }
-      .frame(maxWidth: .infinity, alignment: .leading)
+      .padding(.horizontal, 24)
+      .background(.white)
     }
   }
-  .padding(.horizontal, 24)
+
+  // Gradient ovalization is set to 0.5 according to a swizzle of
+  // didChangeValueForKey
+  @State private var gradientOvalization: CGFloat = 0.5
+  @State private var cornerRadius: CGFloat = 0.0
+}
+
+#Preview {
+  SDFElementViewDemo()
 }
