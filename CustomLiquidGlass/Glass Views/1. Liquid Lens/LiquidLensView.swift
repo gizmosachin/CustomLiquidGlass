@@ -30,9 +30,6 @@ struct LiquidLensView: UIViewRepresentable {
   /// The color the background should be when the lens is in its "Resting" state.
   let restingBackgroundColor: Color
 
-  /// Unclear what this does at the moment. AFAICT, this is having no effect.
-  let useGlassWhenResting: Bool
-
   func makeUIView(context: Context) -> some UIView {
     let _UILiquidLensView = NSClassFromString("_UILiquidLensView") as AnyObject as? NSObjectProtocol
     let allocSelector = NSSelectorFromString("alloc")
@@ -53,13 +50,11 @@ struct LiquidLensView: UIViewRepresentable {
 
   func updateUIView(_ uiView: UIViewType, context: Context) {
     let setWarpsContentBelow = NSSelectorFromString("setWarpsContentBelow:")
-    let setUseGlassWhenResting = NSSelectorFromString("setUseGlassWhenResting:")
     let updateRestingBackgroundView = NSSelectorFromString("updateRestingBackgroundView")
 
     uiView.setValue(UIColor(restingBackgroundColor), forKey: "restingBackgroundColor")
     callObjcBoolMethod(uiView, setWarpsContentBelow, warpsContentBelow)
     callSetLifted(uiView, lifted: isLifted, animated: true)
-    callObjcBoolMethod(uiView, setUseGlassWhenResting, useGlassWhenResting)
 
     uiView.perform(updateRestingBackgroundView)
     uiView.setNeedsLayout()
