@@ -48,21 +48,17 @@ struct LiquidLensView: UIViewRepresentable {
     let lens = instance as! UIView
     lens.backgroundColor = .clear
 
-    let setLifted = NSSelectorFromString("setLifted:")
-    callObjcBoolMethod(lens, setLifted, false)
-
     return lens
   }
 
   func updateUIView(_ uiView: UIViewType, context: Context) {
-    let setLifted = NSSelectorFromString("setLifted:")
     let setWarpsContentBelow = NSSelectorFromString("setWarpsContentBelow:")
     let setUseGlassWhenResting = NSSelectorFromString("setUseGlassWhenResting:")
     let updateRestingBackgroundView = NSSelectorFromString("updateRestingBackgroundView")
 
     uiView.setValue(UIColor(restingBackgroundColor), forKey: "restingBackgroundColor")
     callObjcBoolMethod(uiView, setWarpsContentBelow, warpsContentBelow)
-    callObjcBoolMethod(uiView, setLifted, isLifted)
+    callSetLifted(uiView, lifted: isLifted, animated: true)
     callObjcBoolMethod(uiView, setUseGlassWhenResting, useGlassWhenResting)
 
     uiView.perform(updateRestingBackgroundView)
@@ -74,6 +70,16 @@ struct LiquidLensView: UIViewRepresentable {
     if let method = object.method(for: selector) {
       let function = unsafeBitCast(method, to: ObjCMethod.self)
       function(object, selector, value)
+    }
+  }
+
+  private func callSetLifted(_ object: AnyObject, lifted: Bool, animated: Bool) {
+    typealias ObjCMethod = @convention(c) (AnyObject, Selector, Bool, Bool, AnyObject?, AnyObject?) -> Void
+    let selector = NSSelectorFromString("setLifted:animated:alongsideAnimations:completion:")
+    if let method = object.method(for: selector) {
+      let function = unsafeBitCast(method, to: ObjCMethod.self)
+      // Pass nil for alongsideAnimations and completion (empty values)
+      function(object, selector, lifted, animated, nil, nil)
     }
   }
 }
